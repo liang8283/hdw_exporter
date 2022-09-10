@@ -16,8 +16,8 @@
   "editable": true,
   "gnetId": 13822,
   "graphTooltip": 0,
-  "id": 1,
-  "iteration": 1662713727616,
+  "id": 3,
+  "iteration": 1662780542313,
   "links": [],
   "panels": [
     {
@@ -69,6 +69,7 @@
       "targets": [
         {
           "expr": "hashdata_cluster_uptime",
+          "instant": true,
           "interval": "",
           "legendFormat": "运行时间",
           "refId": "C"
@@ -407,6 +408,7 @@
       "targets": [
         {
           "expr": "hashdata_up",
+          "instant": true,
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -482,6 +484,7 @@
       "targets": [
         {
           "expr": "hashdata_cluster_sync",
+          "instant": true,
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -857,7 +860,20 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "表数目"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": null
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -867,7 +883,8 @@
       },
       "id": 42,
       "options": {
-        "showHeader": true
+        "showHeader": true,
+        "sortBy": []
       },
       "pluginVersion": "7.0.5",
       "targets": [
@@ -1848,5 +1865,5 @@
   "timezone": "",
   "title": "HashData集群监控",
   "uid": "wsZrd9MMk",
-  "version": 8
+  "version": 3
 }
