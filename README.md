@@ -2,6 +2,7 @@
 
 基于go语言为HashData集成普罗米修斯(prometheus)的监控数据采集器。
 
+完整安装部署参考文档：[HashData集群监控部署方案](https://hashdata.feishu.cn/docx/doxcn8ymD6Isjxmdj6XXeKIh8Df)
 
 ### 一、编译方法
 
@@ -26,7 +27,7 @@ cd bin && ls -l
 - docker环境下编译
 
 ```
-git clone https://github.com/tangyibo/hdw_exporter
+git clone https://github.com/liang8283/hdw_exporter.git
 cd hdw_exporter/
 sh docker-build.sh
 ```
