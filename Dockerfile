@@ -7,15 +7,15 @@ WORKDIR /home
 
 ADD . .
 
-RUN mkdir bin && go mod download && go build -o ./bin/greenplum_exporter
+RUN mkdir bin && go mod download && go build -o ./bin/hdw_exporter
 
 # image
 FROM alpine:latest
 
-COPY --from=builder /home/bin/greenplum_exporter /home/greenplum_exporter
+COPY --from=builder /home/bin/hdw_exporter /home/hdw_exporter
 
 EXPOSE 9297
 
 USER root
 
-CMD  [ "/home/greenplum_exporter" , "--log.level=error"]
+CMD  [ "/home/hdw_exporter" , "--log.level=error"]
