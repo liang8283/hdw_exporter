@@ -10,7 +10,6 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-
 var (
 	listenAddress         = kingpin.Flag("web.listen-address", "web endpoint").Default("0.0.0.0:9297").String()
 	metricPath            = kingpin.Flag("web.telemetry-path", "Path under which to expose metrics.").Default("/metrics").String()
@@ -35,6 +34,7 @@ var scrapers = map[collector.Scraper]bool{
 
 	collector.NewActivityScraper():      true,
 	collector.NewSessionMemoryScraper(): true,
+	collector.NewbloatScraper():         true,
 }
 
 var gathers prometheus.Gatherers
