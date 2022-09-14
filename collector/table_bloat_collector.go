@@ -71,6 +71,7 @@ func (bloatScraper) Scrape(db *sql.DB, ch chan<- prometheus.Metric, ver int) err
 		logger.Infof("Connection string is : %s", newDataSourceName)
 
 		conn, err := sql.Open("postgres", newDataSourceName)
+		defer conn.Close()
 
 		rows, err := conn.Query(bloatHeapTableSql)
 		logger.Infof("Query Database: %s", bloatHeapTableSql)
