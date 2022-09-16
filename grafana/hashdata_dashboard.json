@@ -17,7 +17,7 @@
   "gnetId": 13822,
   "graphTooltip": 0,
   "id": 3,
-  "iteration": 1662780542313,
+  "iteration": 1663138580171,
   "links": [],
   "panels": [
     {
@@ -993,104 +993,6 @@
     },
     {
       "datasource": "Prometheus",
-      "description": "描述表数据均匀分布在各个存储节点的程度，这里只展示数据总大小大于1024M且倾斜率大于1.5%的表。",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "align": null,
-            "displayMode": "color-background"
-          },
-          "decimals": 2,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 5
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 7,
-        "x": 10,
-        "y": 16
-      },
-      "id": 50,
-      "options": {
-        "showHeader": true
-      },
-      "pluginVersion": "7.0.5",
-      "targets": [
-        {
-          "expr": "hashdata_server_database_table_skew_list",
-          "format": "table",
-          "instant": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "存储分布倾斜数据列表",
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {},
-            "indexByName": {
-              "Time": 5,
-              "Value": 4,
-              "__name__": 6,
-              "dbname": 0,
-              "instance": 7,
-              "job": 8,
-              "schema": 1,
-              "size": 3,
-              "table": 2
-            },
-            "renameByName": {
-              "Time": "",
-              "Value": "倾斜率",
-              "__name__": "",
-              "dbname": "数据库名",
-              "instance": "",
-              "job": "",
-              "schema": "模式名称",
-              "size": "表大小",
-              "table": "表名称"
-            }
-          }
-        },
-        {
-          "id": "filterFieldsByName",
-          "options": {
-            "include": {
-              "names": [
-                "数据库名",
-                "模式名称",
-                "表名称",
-                "表大小",
-                "倾斜率"
-              ]
-            }
-          }
-        }
-      ],
-      "type": "table"
-    },
-    {
-      "datasource": "Prometheus",
       "description": "列举存在膨胀数据表的信息(需要数据库后端定期或定时使用analyzedb工具分析生成统计数据)",
       "fieldConfig": {
         "defaults": {
@@ -1098,45 +1000,13 @@
             "align": null,
             "displayMode": "color-text"
           },
-          "mappings": [
-            {
-              "from": "",
-              "id": 0,
-              "operator": "",
-              "text": "严重膨胀",
-              "to": "",
-              "type": 1,
-              "value": "2"
-            },
-            {
-              "from": "",
-              "id": 1,
-              "operator": "",
-              "text": "中度膨胀",
-              "to": "",
-              "type": 1,
-              "value": "1"
-            },
-            {
-              "from": "",
-              "id": 2,
-              "operator": "",
-              "text": "轻微膨胀",
-              "to": "",
-              "type": 1,
-              "value": "0"
-            }
-          ],
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 2
               }
             ]
           }
@@ -1145,24 +1015,51 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "期望页数"
+              "options": "膨胀状况"
             },
             "properties": [
               {
-                "id": "custom.width",
-                "value": 71
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "实际页数"
-            },
-            "properties": [
+                "id": "mappings",
+                "value": [
+                  {
+                    "from": "",
+                    "id": 0,
+                    "operator": "",
+                    "text": "轻微膨胀",
+                    "to": "",
+                    "type": 1,
+                    "value": "1"
+                  },
+                  {
+                    "from": "",
+                    "id": 1,
+                    "operator": "",
+                    "text": "严重膨胀",
+                    "to": "",
+                    "type": 1,
+                    "value": "2"
+                  }
+                ]
+              },
               {
-                "id": "custom.width",
-                "value": 116
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 1
+                    },
+                    {
+                      "color": "red",
+                      "value": 2
+                    }
+                  ]
+                }
               }
             ]
           }
@@ -1170,11 +1067,12 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 7,
-        "x": 17,
+        "w": 14,
+        "x": 10,
         "y": 16
       },
       "id": 48,
+      "interval": "",
       "options": {
         "showHeader": true,
         "sortBy": []
@@ -1182,7 +1080,7 @@
       "pluginVersion": "7.0.5",
       "targets": [
         {
-          "expr": "hashdata_server_database_table_bloat_list",
+          "expr": "hashdata_server_heap_table_bloat_detail",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1197,42 +1095,194 @@
         {
           "id": "organize",
           "options": {
-            "excludeByName": {},
+            "excludeByName": {
+              "Time": true,
+              "Value": true,
+              "__name__": true,
+              "instance": true,
+              "job": true
+            },
             "indexByName": {
-              "Time": 6,
-              "Value": 5,
-              "__name__": 7,
-              "dbname": 0,
-              "exppages": 3,
+              "Time": 0,
+              "Value": 10,
+              "__name__": 1,
+              "bdiexppages": 5,
+              "bdinspname": 3,
+              "bdirelname": 4,
+              "bdirelpages": 6,
+              "bloat_state": 7,
+              "datname": 2,
               "instance": 8,
-              "job": 9,
-              "relpages": 4,
-              "schema": 1,
-              "table": 2
+              "job": 9
             },
             "renameByName": {
-              "Value": "膨胀状态",
-              "__name__": "",
-              "dbname": "数据库",
-              "exppages": "期望页数",
-              "relpages": "实际页数",
-              "schema": "模式名",
-              "table": "表名"
+              "bdiexppages": "期望磁盘页数",
+              "bdinspname": "Schema",
+              "bdirelname": "表名",
+              "bdirelpages": "实际磁盘页数",
+              "bloat_state": "膨胀状况",
+              "datname": "数据库"
             }
           }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": null,
+      "description": "只显示大于1G并且倾斜超过20%的表",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
         },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "表大小"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decgbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "最小segment"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decgbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "最大segment"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decgbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "倾斜大小"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decgbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "segment平均大小"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decgbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "倾斜百分比"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 64,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.0.5",
+      "targets": [
         {
-          "id": "filterFieldsByName",
+          "expr": "hashdata_server_dataSkew_detail",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "倾斜表",
+      "transformations": [
+        {
+          "id": "organize",
           "options": {
-            "include": {
-              "names": [
-                "数据库",
-                "期望页数",
-                "实际页数",
-                "模式名",
-                "表名",
-                "膨胀状态"
-              ]
+            "excludeByName": {
+              "Time": true,
+              "Value": true,
+              "__name__": true,
+              "instance": true,
+              "job": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "Value": 13,
+              "__name__": 1,
+              "instance": 2,
+              "job": 3,
+              "nb_empty_seg": 12,
+              "schema_name": 4,
+              "seg_avg_size_gb": 10,
+              "seg_gap_min_max_gb": 9,
+              "seg_gap_min_max_percent": 11,
+              "seg_max_size_gb": 8,
+              "seg_min_size_gb": 7,
+              "table_name": 5,
+              "total_size_gb": 6
+            },
+            "renameByName": {
+              "nb_empty_seg": "空的segment数量",
+              "schema_name": "Schema",
+              "seg_avg_size_gb": "segment平均大小",
+              "seg_gap_min_max_gb": "倾斜大小",
+              "seg_gap_min_max_percent": "倾斜百分比",
+              "seg_max_size_gb": "最大segment",
+              "seg_min_size_gb": "最小segment",
+              "table_name": "表名",
+              "total_size_gb": "表大小"
             }
           }
         }
@@ -1259,7 +1309,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 24
+        "y": 32
       },
       "hiddenSeries": false,
       "id": 6,
@@ -1449,7 +1499,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 32
+        "y": 40
       },
       "id": 54,
       "options": {
@@ -1511,6 +1561,132 @@
               "start_time": "查询开始时间",
               "usename": "用户",
               "waiting": "是否等待"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "使用总内存"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decmbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "segment使用最大内存"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decmbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "segment平均使用内存"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decmbytes"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 49
+      },
+      "id": 58,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.0.5",
+      "targets": [
+        {
+          "expr": "hashdata_server_session_memory_detail",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "数据库进程内存使用实时列表",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Value": true,
+              "__name__": true,
+              "instance": true,
+              "job": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "Value": 12,
+              "__name__": 9,
+              "datname": 3,
+              "instance": 10,
+              "job": 11,
+              "pid": 1,
+              "query": 8,
+              "sess_id": 2,
+              "usename": 4,
+              "vmem_avg": 7,
+              "vmem_max_seg": 6,
+              "vmem_total": 5
+            },
+            "renameByName": {
+              "Time": "当前时间",
+              "datname": "数据库",
+              "pid": "进程ID",
+              "query": "当前执行查询",
+              "sess_id": "会话ID",
+              "usename": "用户名",
+              "vmem_avg": "segment平均使用内存",
+              "vmem_max_seg": "segment使用最大内存",
+              "vmem_total": "使用总内存"
             }
           }
         }
@@ -1596,7 +1772,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 41
+        "y": 56
       },
       "id": 32,
       "options": {
@@ -1652,132 +1828,6 @@
               "query": "查询语句",
               "state": "连接状态",
               "usename": "操作账号"
-            }
-          }
-        }
-      ],
-      "type": "table"
-    },
-    {
-      "datasource": null,
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "align": null
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "使用总内存"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "decmbytes"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "segment使用最大内存"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "decmbytes"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "segment平均使用内存"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "decmbytes"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 48
-      },
-      "id": 58,
-      "options": {
-        "showHeader": true
-      },
-      "pluginVersion": "7.0.5",
-      "targets": [
-        {
-          "expr": "hashdata_server_session_memory_detail",
-          "format": "table",
-          "instant": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "数据库进程内存使用实时列表",
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Value": true,
-              "__name__": true,
-              "instance": true,
-              "job": true
-            },
-            "indexByName": {
-              "Time": 0,
-              "Value": 12,
-              "__name__": 9,
-              "datname": 3,
-              "instance": 10,
-              "job": 11,
-              "pid": 1,
-              "query": 8,
-              "sess_id": 2,
-              "usename": 4,
-              "vmem_avg": 7,
-              "vmem_max_seg": 6,
-              "vmem_total": 5
-            },
-            "renameByName": {
-              "Time": "当前时间",
-              "datname": "数据库",
-              "pid": "进程ID",
-              "query": "当前执行查询",
-              "sess_id": "会话ID",
-              "usename": "用户名",
-              "vmem_avg": "segment平均使用内存",
-              "vmem_max_seg": "segment使用最大内存",
-              "vmem_total": "使用总内存"
             }
           }
         }
@@ -1865,5 +1915,5 @@
   "timezone": "",
   "title": "HashData集群监控",
   "uid": "wsZrd9MMk",
-  "version": 3
+  "version": 4
 }

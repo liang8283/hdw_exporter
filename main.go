@@ -35,6 +35,7 @@ var scrapers = map[collector.Scraper]bool{
 	collector.NewActivityScraper():      true,
 	collector.NewSessionMemoryScraper(): true,
 	collector.NewbloatScraper():         true,
+	collector.NewDataSkewScraper():      true,
 }
 
 var gathers prometheus.Gatherers
