@@ -3,6 +3,7 @@ package collector
 import (
 	"database/sql"
 	"time"
+
 	"github.com/prometheus/client_golang/prometheus"
 	logger "github.com/prometheus/common/log"
 )
@@ -72,13 +73,13 @@ func (activityScraper) Name() string {
 }
 
 func (activityScraper) Scrape(db *sql.DB, ch chan<- prometheus.Metric, ver int) error {
-	activitySql :=pgActivitySql_v6;
-	if ver < 6{
-		activitySql=pgActivitySql_v5;
+	activitySql := pgActivitySql_v6
+	if ver < 6 {
+		activitySql = pgActivitySql_v5
 	}
 
 	rows, err := db.Query(activitySql)
-	logger.Infof("Query Database: %s",activitySql)
+	logger.Infof("Query Database: %s", activitySql)
 
 	if err != nil {
 		return err
@@ -87,9 +88,9 @@ func (activityScraper) Scrape(db *sql.DB, ch chan<- prometheus.Metric, ver int) 
 	defer rows.Close()
 
 	for rows.Next() {
-		var pid,sess_id,datname,usename,application_name,duration,
-		start_time,waiting,query,rsgname string
-		var client_addr, waiting_reason, rsgqueueduration sql.NullString
+		var pid, sess_id, datname, usename, application_name, duration,
+			waiting, query, rsgname string
+		var start_time, client_addr, waiting_reason, rsgqueueduration sql.NullString
 		var currentTime time.Time
 		var count int64
 		err = rows.Scan(&currentTime,
@@ -112,15 +113,15 @@ func (activityScraper) Scrape(db *sql.DB, ch chan<- prometheus.Metric, ver int) 
 			return err
 		}
 
-		ch <- prometheus.MustNewConstMetric(activityDesc, prometheus.GaugeValue, 
+		ch <- prometheus.MustNewConstMetric(activityDesc, prometheus.GaugeValue,
 			float64(currentTime.UTC().Unix()),
-			datname, 
+			datname,
 			pid,
 			sess_id,
 			usename,
 			application_name,
 			client_addr.String,
-			start_time,
+			start_time.String,
 			duration,
 			waiting,
 			query,

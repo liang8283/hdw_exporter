@@ -17,7 +17,7 @@
   "gnetId": 13822,
   "graphTooltip": 0,
   "id": 3,
-  "iteration": 1663138580171,
+  "iteration": 1663834194433,
   "links": [],
   "panels": [
     {
@@ -68,7 +68,7 @@
       "repeat": null,
       "targets": [
         {
-          "expr": "hashdata_cluster_uptime",
+          "expr": "hashdata_cluster_uptime{instance=~\"$cluster\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "运行时间",
@@ -81,7 +81,7 @@
       "type": "gauge"
     },
     {
-      "content": "<font size=10><center>$hdw_version</center></font>",
+      "content": "<font size=10><center>$hdw_version</center></font>\n",
       "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
@@ -220,7 +220,7 @@
       "pluginVersion": "7.0.5",
       "targets": [
         {
-          "expr": "sum(hashdata_node_database_name_mb_size)",
+          "expr": "sum(hashdata_node_database_name_mb_size{instance=~\"$cluster\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -278,7 +278,7 @@
       "pluginVersion": "7.0.5",
       "targets": [
         {
-          "expr": "hashdata_cluster_total_connections",
+          "expr": "hashdata_cluster_total_connections{instance=~\"$cluster\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -331,7 +331,7 @@
       "pluginVersion": "7.0.5",
       "targets": [
         {
-          "expr": "hashdata_cluster_max_connections",
+          "expr": "hashdata_cluster_max_connections{instance=~\"$cluster\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -407,7 +407,7 @@
       "pluginVersion": "7.0.5",
       "targets": [
         {
-          "expr": "hashdata_up",
+          "expr": "hashdata_up{instance=~\"$cluster\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -483,7 +483,7 @@
       "pluginVersion": "7.0.5",
       "targets": [
         {
-          "expr": "hashdata_cluster_sync",
+          "expr": "hashdata_cluster_sync{instance=~\"$cluster\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -563,7 +563,7 @@
       "repeat": null,
       "targets": [
         {
-          "expr": "hashdata_node_segment_status",
+          "expr": "hashdata_node_segment_status{instance=~\"$cluster\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -710,7 +710,7 @@
       "repeat": null,
       "targets": [
         {
-          "expr": "hashdata_node_segment_mode",
+          "expr": "hashdata_node_segment_mode{instance=~\"$cluster\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -803,7 +803,7 @@
       "pluginVersion": "7.0.5",
       "targets": [
         {
-          "expr": "hashdata_node_segment_disk_free_gb_size",
+          "expr": "hashdata_node_segment_disk_free_gb_size{instance=~\"$cluster\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -889,7 +889,7 @@
       "pluginVersion": "7.0.5",
       "targets": [
         {
-          "expr": "hashdata_node_database_table_total_count",
+          "expr": "hashdata_node_database_table_total_count{instance=~\"$cluster\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -959,7 +959,7 @@
       "pluginVersion": "7.0.5",
       "targets": [
         {
-          "expr": "hashdata_node_database_name_mb_size",
+          "expr": "hashdata_node_database_name_mb_size{instance=~\"$cluster\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1062,6 +1062,18 @@
                 }
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "数据库"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": null
+              }
+            ]
           }
         ]
       },
@@ -1080,7 +1092,7 @@
       "pluginVersion": "7.0.5",
       "targets": [
         {
-          "expr": "hashdata_server_heap_table_bloat_detail",
+          "expr": "hashdata_server_heap_table_bloat_detail{instance=~\"$cluster\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1235,7 +1247,7 @@
       "pluginVersion": "7.0.5",
       "targets": [
         {
-          "expr": "hashdata_server_dataSkew_detail",
+          "expr": "hashdata_server_dataSkew_detail{instance=~\"$cluster\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1339,13 +1351,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "hashdata_cluster_active_connections",
+          "expr": "hashdata_cluster_active_connections{instance=~\"$cluster\"}",
           "interval": "",
           "legendFormat": "活动连接数",
           "refId": "A"
         },
         {
-          "expr": "hashdata_cluster_total_connections",
+          "expr": "hashdata_cluster_total_connections{instance=~\"$cluster\"}",
           "interval": "",
           "legendFormat": "总连接数",
           "refId": "B"
@@ -1508,7 +1520,7 @@
       "pluginVersion": "7.0.5",
       "targets": [
         {
-          "expr": "hashdata_server_activity_detail",
+          "expr": "hashdata_server_activity_detail{instance=~\"$cluster\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1641,7 +1653,7 @@
       "pluginVersion": "7.0.5",
       "targets": [
         {
-          "expr": "hashdata_server_session_memory_detail",
+          "expr": "hashdata_server_session_memory_detail{instance=~\"$cluster\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1782,7 +1794,7 @@
       "pluginVersion": "7.0.5",
       "targets": [
         {
-          "expr": "hashdata_server_locks_table_detail",
+          "expr": "hashdata_server_locks_table_detail{instance=~\"$cluster\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1844,19 +1856,45 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
-          "text": "5.28.11",
-          "value": "5.28.11"
+          "selected": true,
+          "text": "192.168.176.22:9297",
+          "value": "192.168.176.22:9297"
         },
         "datasource": "Prometheus",
-        "definition": "label_values(hashdata_cluster_state, version)",
+        "definition": "label_values(instance)",
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "cluster",
+        "options": [],
+        "query": "label_values(instance)",
+        "refresh": 1,
+        "regex": ".*:92.*",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "6.9.0",
+          "value": "6.9.0"
+        },
+        "datasource": "Prometheus",
+        "definition": "label_values(hashdata_cluster_state{instance=~\"$cluster\"}, version)",
         "hide": 2,
         "includeAll": false,
         "label": null,
         "multi": false,
         "name": "version",
         "options": [],
-        "query": "label_values(hashdata_cluster_state, version)",
+        "query": "label_values(hashdata_cluster_state{instance=~\"$cluster\"}, version)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1871,18 +1909,18 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "2.5.11",
-          "value": "2.5.11"
+          "text": "3.10.9",
+          "value": "3.10.9"
         },
         "datasource": "Prometheus",
-        "definition": "label_values(hashdata_cluster_state, hdw_version)",
+        "definition": "label_values(hashdata_cluster_state{instance=~\"$cluster\"}, hdw_version)",
         "hide": 2,
         "includeAll": false,
         "label": null,
         "multi": false,
         "name": "hdw_version",
         "options": [],
-        "query": "label_values(hashdata_cluster_state, hdw_version)",
+        "query": "label_values(hashdata_cluster_state{instance=~\"$cluster\"}, hdw_version)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1915,5 +1953,5 @@
   "timezone": "",
   "title": "HashData集群监控",
   "uid": "wsZrd9MMk",
-  "version": 4
+  "version": 7
 }
