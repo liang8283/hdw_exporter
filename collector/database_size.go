@@ -17,7 +17,7 @@ import (
  */
 
 const (
-	databaseSizeSql = `SELECT sodddatname as database_name,sodddatsize/(1024*1024) as database_size_mb from gp_toolkit.gp_size_of_database;`
+	databaseSizeSql = `SELECT sodddatname as database_name,COALESCE(sodddatsize/(1024*1024), sodddatsize/(1024*1024), 0) as database_size_mb from gp_toolkit.gp_size_of_database;`
 	tableCountSql   = `SELECT count(*) as total from information_schema.tables where table_schema not in ('gp_toolkit','information_schema','pg_catalog');`
 	bloatTableSql   = `
 		SELECT current_database(),bdinspname,bdirelname,bdirelpages,bdiexppages,(
