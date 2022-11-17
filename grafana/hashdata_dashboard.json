@@ -17,7 +17,7 @@
   "gnetId": 13822,
   "graphTooltip": 0,
   "id": 3,
-  "iteration": 1663834194433,
+  "iteration": 1668654256590,
   "links": [],
   "panels": [
     {
@@ -1141,6 +1141,156 @@
       "type": "table"
     },
     {
+      "datasource": "Prometheus",
+      "description": "默认只显示一天之内的drop，truncate以及delete操作。",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "数据库"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 104
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "主机"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 115
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "会话"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 88
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "用户"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 96
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "时间"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 270
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 66,
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "7.0.5",
+      "targets": [
+        {
+          "expr": "hashdata_server_master_log_detail",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "数据库审计日志",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": true,
+              "__name__": true,
+              "instance": true,
+              "job": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "Value": 10,
+              "__name__": 1,
+              "instance": 3,
+              "job": 4,
+              "logdatabase": 5,
+              "loghost": 6,
+              "logmessage": 9,
+              "logsession": 7,
+              "logtime": 2,
+              "loguser": 8
+            },
+            "renameByName": {
+              "Time": "",
+              "Value": "",
+              "logdatabase": "数据库",
+              "loghost": "主机",
+              "logmessage": "执行语句",
+              "logsession": "会话",
+              "logtime": "时间",
+              "loguser": "用户"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
       "datasource": null,
       "description": "只显示大于1G并且倾斜超过20%的表",
       "fieldConfig": {
@@ -1238,7 +1388,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 24
+        "y": 32
       },
       "id": 64,
       "options": {
@@ -1321,7 +1471,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 32
+        "y": 40
       },
       "hiddenSeries": false,
       "id": 6,
@@ -1511,7 +1661,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 40
+        "y": 48
       },
       "id": 54,
       "options": {
@@ -1644,7 +1794,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 49
+        "y": 57
       },
       "id": 58,
       "options": {
@@ -1784,7 +1934,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 56
+        "y": 64
       },
       "id": 32,
       "options": {
@@ -1857,8 +2007,8 @@
         "allValue": null,
         "current": {
           "selected": true,
-          "text": "192.168.176.22:9297",
-          "value": "192.168.176.22:9297"
+          "text": "192.168.176.22:9298",
+          "value": "192.168.176.22:9298"
         },
         "datasource": "Prometheus",
         "definition": "label_values(instance)",
@@ -1883,8 +2033,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "6.9.0",
-          "value": "6.9.0"
+          "text": "5.28.11",
+          "value": "5.28.11"
         },
         "datasource": "Prometheus",
         "definition": "label_values(hashdata_cluster_state{instance=~\"$cluster\"}, version)",
@@ -1909,8 +2059,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "3.10.9",
-          "value": "3.10.9"
+          "text": "2.5.11",
+          "value": "2.5.11"
         },
         "datasource": "Prometheus",
         "definition": "label_values(hashdata_cluster_state{instance=~\"$cluster\"}, hdw_version)",
@@ -1953,5 +2103,5 @@
   "timezone": "",
   "title": "HashData集群监控",
   "uid": "wsZrd9MMk",
-  "version": 7
+  "version": 8
 }
