@@ -9,11 +9,12 @@ import (
 
 const (
 	sessionMemorySql_v6 = `
-		select now(),b.pid,a.sess_id,a.datname,a.usename, max(vmem_mb) as vmem_max_seg,round(avg(vmem_mb)) as vmem_avg,sum(vmem_mb) as vmem_total, a.query
+		select now(),b.pid,b.sess_id,b.datname,b.usename, max(vmem_mb) as vmem_max_seg,round(avg(vmem_mb)) as vmem_avg,sum(vmem_mb) as vmem_total, b.query
 		from session_state.session_level_memory_consumption a join pg_stat_activity b
 		on a.sess_id = b.sess_id
 		where b.pid <> pg_backend_pid()
-		group by b.pid,a.sess_id,a.datname,a.usename, a.query`
+		and b.datname is not null
+		group by b.pid,b.sess_id,b.datname,b.usename, b.query`
 	sessionMemorySql_v5 = `
 		select now(),b.procpid,a.sess_id,a.datname,a.usename, max(vmem_mb) as vmem_max_seg,round(avg(vmem_mb)) as vmem_avg,sum(vmem_mb) as vmem_total, a.current_query
 		from session_state.session_level_memory_consumption a join pg_stat_activity b
@@ -43,7 +44,7 @@ func (sessionMemoryScraper) Name() string {
 
 func (sessionMemoryScraper) Scrape(db *sql.DB, ch chan<- prometheus.Metric, ver int) error {
 	sessionMemorySql :=sessionMemorySql_v6;
-	if ver < 6{
+	if ver > 3 && ver < 6{
 		sessionMemorySql=sessionMemorySql_v5;
 	}
 
@@ -57,7 +58,8 @@ func (sessionMemoryScraper) Scrape(db *sql.DB, ch chan<- prometheus.Metric, ver 
 	defer rows.Close()
 
 	for rows.Next() {
-		var pid,sess_id,datname,usename,vmem_max_seg,vmem_avg,vmem_total,query string
+		var pid,sess_id,vmem_max_seg,vmem_avg,vmem_total,query string
+		var datname, usename sql.NullString
 		var currentTime time.Time
 //		var count int64
 		err = rows.Scan(&currentTime,
@@ -76,10 +78,10 @@ func (sessionMemoryScraper) Scrape(db *sql.DB, ch chan<- prometheus.Metric, ver 
 
 		ch <- prometheus.MustNewConstMetric(sessionMemoryDesc, prometheus.GaugeValue, 
 			float64(currentTime.UTC().Unix()),
-			datname, 
+			datname.String, 
 			pid,
 			sess_id,
-			usename,
+			usename.String,
 			vmem_max_seg,
 			vmem_avg,
 			vmem_total,

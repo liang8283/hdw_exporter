@@ -88,7 +88,7 @@ func (locksScraper) Name() string {
 
 func (locksScraper) Scrape(db *sql.DB, ch chan<- prometheus.Metric, ver int) error {
 	querySql := locksQuerySql_V6
-	if ver < 6 {
+	if ver > 3 && ver < 6 {
 		querySql = locksQuerySql_V5
 	}
 

@@ -11,8 +11,10 @@ import (
 
 const (
 	checkStateSql        = `SELECT count(1) from gp_dist_random('gp_id')`
-	versionSql           = `select (select regexp_matches((select (select regexp_matches((select version()), 'Greenplum Database \d{1,}\.\d{1,}\.\d{1,}'))[1] as version), '\d{1,}\.\d{1,}\.\d{1,}'))[1];`
-	hdwVersionSql        = `select (select regexp_matches((select (select regexp_matches((select version()), 'HashData Warehouse \d{1,}\.\d{1,}\.\d{1,}'))[1] as version), '\d{1,}\.\d{1,}\.\d{1,}'))[1];`
+//	versionSql           = `select (select regexp_matches((select (select regexp_matches((select version()), 'Greenplum Database \d{1,}\.\d{1,}\.\d{1,}'))[1] as version), '\d{1,}\.\d{1,}\.\d{1,}'))[1];`
+	versionSql           = `select (select regexp_matches((select (select regexp_matches((select version()), 'PostgreSQL \d{1,}\.\d{1,}'))[1] as version), '\d{1,}\.\d{1,}'))[1];`
+//	hdwVersionSql        = `select (select regexp_matches((select (select regexp_matches((select version()), 'HashData Warehouse \d{1,}\.\d{1,}\.\d{1,}'))[1] as version), '\d{1,}\.\d{1,}\.\d{1,}'))[1];`
+	hdwVersionSql        = `select (select regexp_matches((select (select regexp_matches((select version()), 'Cloudberry Database \d{1,}\.\d{1,}\.\d{1,}'))[1] as version), '\d{1,}\.\d{1,}\.\d{1,}'))[1];`
 	masterNameSql        = `SELECT hostname from gp_segment_configuration where content=-1 and role='p'`
 	standbyNameSql       = `SELECT hostname from gp_segment_configuration where content=-1 and role='m'`
 	upTimeSql            = `select extract(epoch from now() - pg_postmaster_start_time())`
@@ -216,7 +218,7 @@ func scrapeSync(db *sql.DB) (sync float64, err error) {
 
 func scrapeConfigLoadTime(db *sql.DB, ver int) (time time.Time, err error) {
 	querySql := configLoadTimeSql_V6
-	if ver < 6 {
+	if ver > 3 && ver < 6 {
 		querySql = configLoadTimeSql_V5
 	}
 

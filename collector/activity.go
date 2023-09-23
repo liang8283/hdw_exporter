@@ -9,27 +9,50 @@ import (
 )
 
 const (
+//	pgActivitySql_v6 = `
+//		select 
+//			now(),
+//			datname,
+//			pid,
+//			sess_id,
+//			usename,
+//			application_name,
+//			client_addr,
+//			backend_start,
+//			least(query_start,xact_start) as start_time,
+//			round(extract(epoch FROM (now() - query_start))) as duration,
+//			waiting,
+//			query,
+//			wait_event,
+//			rsgname,
+//			rsgqueueduration,
+//			count(*)::float 
+//		from pg_stat_activity
+//		where pid <> pg_backend_pid()
+//		group by datname,pid,sess_id,usename,application_name,client_addr,start_time,backend_start,duration,waiting,query,wait_event,rsgname,rsgqueueduration
+//		order by start_time;`
 	pgActivitySql_v6 = `
 		select 
-			now(),
-			datname,
-			pid,
-			sess_id,
-			usename,
-			application_name,
-			client_addr,
-			least(query_start,xact_start) as start_time,
-			round(extract(epoch FROM (now() - query_start))) as duration,
-			waiting,
-			query,
-			waiting_reason,
-			rsgname,
-			rsgqueueduration,
-			count(*)::float 
+		now(),
+		datname,
+		pid,
+		sess_id,
+		usename,
+		application_name,
+		client_addr,
+		backend_start,
+		least(query_start,xact_start) as start_time,
+		round(extract(epoch FROM (now() - query_start))) as duration,
+		wait_event,
+		query,
+		wait_event_type,
+		rsgname,
+		count(*)::float 
 		from pg_stat_activity
 		where pid <> pg_backend_pid()
-		group by datname,pid,sess_id,usename,application_name,client_addr,start_time,duration,waiting,query,waiting_reason,rsgname,rsgqueueduration
-		order by start_time;`
+		group by datname,pid,sess_id,usename,application_name,client_addr,start_time,backend_start,duration,wait_event,query,wait_event_type,rsgname
+		order by start_time;
+	`
 	pgActivitySql_v5 = `
 		select 
 			now(),
@@ -39,17 +62,17 @@ const (
 			usename,
 			application_name,
 			client_addr,
+			backend_start,
 			least(query_start,xact_start) as start_time,
 			round(extract(epoch FROM (now() - query_start))) as duration,
 			waiting,
 			current_query,
 			waiting_reason,
 			rsgname,
-			rsgqueueduration,
 			count(*)::float
 		from pg_stat_activity
 		where procpid <> pg_backend_pid()
-		group by datname,procpid,sess_id,usename,application_name,client_addr,start_time,duration,waiting,current_query,waiting_reason,rsgname,rsgqueueduration
+		group by datname,procpid,sess_id,usename,application_name,client_addr,start_time,backend_start,duration,waiting,current_query,waiting_reason,rsgname
 		order by start_time;`
 )
 
@@ -57,7 +80,7 @@ var (
 	activityDesc = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, subSystemServer, "activity_detail"),
 		"Processes detail for HashData database",
-		[]string{"datname", "pid", "sess_id", "usename", "application_name", "client_addr", "start_time", "duration", "waiting", "query", "waiting_reason", "rsgname", "rsgqueueduration"},
+		[]string{"datname", "pid", "sess_id", "usename", "application_name", "client_addr", "backend_start", "start_time", "duration", "wait_event", "query", "wait_event_type", "rsgname"},
 		nil,
 	)
 )
@@ -74,7 +97,7 @@ func (activityScraper) Name() string {
 
 func (activityScraper) Scrape(db *sql.DB, ch chan<- prometheus.Metric, ver int) error {
 	activitySql := pgActivitySql_v6
-	if ver < 6 {
+	if ver > 3 && ver < 6 {
 		activitySql = pgActivitySql_v5
 	}
 
@@ -88,9 +111,8 @@ func (activityScraper) Scrape(db *sql.DB, ch chan<- prometheus.Metric, ver int) 
 	defer rows.Close()
 
 	for rows.Next() {
-		var pid, sess_id, datname, usename, application_name, duration,
-			waiting, query, rsgname string
-		var start_time, client_addr, waiting_reason, rsgqueueduration sql.NullString
+		var pid, sess_id, application_name, query, rsgname string
+		var datname, usename, start_time, backend_start, client_addr, duration, wait_event, wait_event_type sql.NullString
 		var currentTime time.Time
 		var count int64
 		err = rows.Scan(&currentTime,
@@ -101,12 +123,12 @@ func (activityScraper) Scrape(db *sql.DB, ch chan<- prometheus.Metric, ver int) 
 			&application_name,
 			&client_addr,
 			&start_time,
+			&backend_start,
 			&duration,
-			&waiting,
+			&wait_event,
 			&query,
-			&waiting_reason,
+			&wait_event_type,
 			&rsgname,
-			&rsgqueueduration,
 			&count)
 
 		if err != nil {
@@ -115,19 +137,19 @@ func (activityScraper) Scrape(db *sql.DB, ch chan<- prometheus.Metric, ver int) 
 
 		ch <- prometheus.MustNewConstMetric(activityDesc, prometheus.GaugeValue,
 			float64(currentTime.UTC().Unix()),
-			datname,
+			datname.String,
 			pid,
 			sess_id,
-			usename,
+			usename.String,
 			application_name,
 			client_addr.String,
 			start_time.String,
-			duration,
-			waiting,
+			backend_start.String,
+			duration.String,
+			wait_event.String,
 			query,
-			waiting_reason.String,
-			rsgname,
-			rsgqueueduration.String)
+			wait_event_type.String,
+			rsgname)
 	}
 
 	return nil

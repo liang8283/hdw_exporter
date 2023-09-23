@@ -14,12 +14,12 @@ import (
 
 const (
 	connectionsSql_V6 = `select 
-                         count(*) total, 
-                         count(*) filter(where state<>'active') idle, 
-                         count(*) filter(where state='active') active,
-                         count(*) filter(where state='active' and not waiting) running,
-                         count(*) filter(where state='active' and waiting) waiting
-						 from pg_stat_activity where pid <> pg_backend_pid();`
+						 count(*) total, 
+						 count(*) filter(where state<>'active') idle, 
+						 count(*) filter(where state='active') active,
+						 count(*) filter(where state='active' and wait_event is null) running,
+						 count(*) filter(where state='active' and wait_event is not null) waiting
+						 from pg_stat_activity where pid <> pg_backend_pid() and sess_id > 5;`
 	connectionsSql_V5 = `select 
                          count(*) total, 
                          count(*) filter(where current_query='<IDLE>') idle, 
@@ -73,7 +73,7 @@ func (connectionsScraper) Name() string {
 
 func (connectionsScraper) Scrape(db *sql.DB, ch chan<- prometheus.Metric, ver int) error {
 	querySql := connectionsSql_V6
-	if ver < 6 {
+	if ver > 3 && ver < 6 {
 		querySql = connectionsSql_V5
 	}
 

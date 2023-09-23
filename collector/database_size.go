@@ -152,15 +152,15 @@ func (databaseSizeScraper) Scrape(db *sql.DB, ch chan<- prometheus.Metric, ver i
 		ch <- prometheus.MustNewConstMetric(tablesCountDesc, prometheus.GaugeValue, count, dbname)
 	}
 
-	errM := queryHitCacheRate(db, ch)
-	if errM != nil {
-		errs = append(errs, errM)
-	}
-
-	errN := queryTxCommitRate(db, ch)
-	if errN != nil {
-		errs = append(errs, errN)
-	}
+	//	errM := queryHitCacheRate(db, ch)
+	//	if errM != nil {
+	//		errs = append(errs, errM)
+	//	}
+	//
+	//	errN := queryTxCommitRate(db, ch)
+	//	if errN != nil {
+	//		errs = append(errs, errN)
+	//	}
 
 	return combineErr(errs...)
 }

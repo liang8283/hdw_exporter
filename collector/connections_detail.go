@@ -103,7 +103,7 @@ func (connectionsDetailScraper) Scrape(db *sql.DB, ch chan<- prometheus.Metric, 
 
 func scrapeLoadByUser(db *sql.DB, ch chan<- prometheus.Metric, ver int) error {
 	querySql := connectionsByUserSql_V6
-	if ver < 6 {
+	if ver > 3 && ver < 6 {
 		querySql = connectionsByUserSql_V5
 	}
 
@@ -121,7 +121,7 @@ func scrapeLoadByUser(db *sql.DB, ch chan<- prometheus.Metric, ver int) error {
 
 	var totalOnlineUserCount int = 0
 	for rows.Next() {
-		var usename string
+		var usename sql.NullString
 		var total, idle, active float64
 
 		err = rows.Scan(&usename, &total, &idle, &active)
@@ -131,9 +131,9 @@ func scrapeLoadByUser(db *sql.DB, ch chan<- prometheus.Metric, ver int) error {
 			continue
 		}
 
-		ch <- prometheus.MustNewConstMetric(totalPerUserDesc, prometheus.GaugeValue, total, usename)
-		ch <- prometheus.MustNewConstMetric(idlePerUserDesc, prometheus.GaugeValue, idle, usename)
-		ch <- prometheus.MustNewConstMetric(activePerUserDesc, prometheus.GaugeValue, active, usename)
+		ch <- prometheus.MustNewConstMetric(totalPerUserDesc, prometheus.GaugeValue, total, usename.String)
+		ch <- prometheus.MustNewConstMetric(idlePerUserDesc, prometheus.GaugeValue, idle, usename.String)
+		ch <- prometheus.MustNewConstMetric(activePerUserDesc, prometheus.GaugeValue, active, usename.String)
 
 		totalOnlineUserCount++
 	}
@@ -145,7 +145,7 @@ func scrapeLoadByUser(db *sql.DB, ch chan<- prometheus.Metric, ver int) error {
 
 func scrapeLoadByClient(db *sql.DB, ch chan<- prometheus.Metric, ver int) error {
 	querySql := connectionsByClientAddressSql_V6
-	if ver < 6 {
+	if ver > 3 && ver < 6 {
 		querySql = connectionsByClientAddressSql_V5
 	}
 
